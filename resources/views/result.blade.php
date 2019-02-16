@@ -1,38 +1,48 @@
-<!doctype html>
-<html class="no-js" lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Oblatia | Result</title>
-    <meta name="description" content="言いたいけど言えない本音、オブラートに包んでしまいましょう">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+@extends('layouts.base')
 
-    <meta property="og:url" content="ページのURL" />
-    <meta property="og:title" content="ページのタイトル" />
-    <meta property="og:type" content="ページのタイプ">
-    <meta property="og:description" content="記事の抜粋" />
-    <meta property="og:image" content="画像のURL" />
-    <meta name="twitter:card" content="カード種類" />
-    <meta name="twitter:site" content="@Twitterユーザー名" />
-    <meta property="og:site_name" content="サイト名" />
-    <meta property="og:locale" content="ja_JP" />
-    <meta property="fb:app_id" content="appIDを入力">
-</head>
-<body>
-<header>
-    <h1>Oblatia</h1>
-</header>
-<h2>本音: {{ $result }}</h2>
-<div>
-    <p>オブラートに包みました！いかがでしょう？</p>
-    <div>
-        <p>結果結果結果結果結果結果結果結果結果</p>
+@section('content')
+    <div class="container">
+        <div class="card mt-3 mb-4">
+            <div class="card-header">
+                <p>
+                    {{ $inputText }}<br>
+                    をオブラートに包みました！いかがでしょう？
+                </p>
+            </div>
+            <div class="card-body">
+                <h2 id="targetText">{{ $resultText }}</h2>
+            </div>
+        </div>
+        <a href="{{ route('index') }}" class="btn btn-outline-secondary">別のオブラートで包む</a>
+        <a href="#" id="copy" class="btn btn-success">包んだ結果をコピーする</a>
     </div>
-    <a href="{{ route('index') }}">別のオブラートで包む</a>
-    <a>包んだ結果をコピーする</a>
-</div>
-<footer>
-    <small>© 2019 Oblatia</small>
-</footer>
-</body>
-</html>
+
+    <script>
+        function execCopy(string) {
+            let temp = document.createElement('textarea');
+
+            temp.value = string;
+            temp.selectionStart = 0;
+            temp.selectionEnd = temp.value.length;
+
+            document.body.appendChild(temp);
+            temp.focus();
+            let result = document.execCommand('copy');
+            temp.blur();
+            document.body.removeChild(temp);
+            // true なら実行できている falseなら失敗か対応していないか
+            return result;
+        }
+
+        let textarea = document.getElementById('targetText');
+        let button = document.getElementById('copy');
+
+        button.onclick = function () {
+            if (execCopy(textarea.innerText)) {
+                alert('コピーしました！');
+            } else {
+                alert('このブラウザでは対応していません');
+            }
+        };
+    </script>
+@endsection
